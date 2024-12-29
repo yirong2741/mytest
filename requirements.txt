@@ -1,7 +1,6 @@
-streamlit：1.17.0
-requests：2.28.1
-beautifulsoup4：4.11.1
-jieba：0.42.1
-plotly：5.10.0
-pandas：1.5.3
-pyecharts：1.9.0
+requests==2.32.3
+streamlit==1.41.1
+beautifulsoup4==4.12.3
+jieba==0.42.1
+pyecharts==2.0.7
+pyecharts-snapshot==0.2.0
