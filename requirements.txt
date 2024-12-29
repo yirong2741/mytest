@@ -4,3 +4,4 @@ beautifulsoup4==4.12.3
 jieba==0.42.1
 pyecharts==2.0.7
 pyecharts-snapshot==0.2.0
+plotly==5.24.1
