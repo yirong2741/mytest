@@ -8,6 +8,7 @@ import pandas as pd
 from pyecharts.charts import WordCloud, Bar, Line, Scatter, Radar
 from pyecharts import options as opts
 from streamlit.components.v1 import html
+import altair as alt
 
 # 设计文本输入框
 url = st.text_input("请输入文章的URL")
@@ -35,7 +36,8 @@ if url:
     st.write("词频排名前20的词汇:", top_20_words)
 
     # 图型筛选
-    chart_type = st.sidebar.selectbox("选择图表类型", ["词云", "柱状图", "饼图", "折线图", "散点图", "雷达图", "箱形图", "面积图", "树形图"])
+    chart_type = st.sidebar.selectbox("选择图表类型", ["词云",  "饼图", "折线图", "散点图", "雷达图",  "面积图", "树状图", "Altair条形图"])
+
 
     # 根据选择的图表类型显示不同的图表
     if chart_type == "词云":
@@ -46,11 +48,6 @@ if url:
         # 显示词云
         wordcloud_html = wordcloud.render_embed()
         html(wordcloud_html, height=800)
-    elif chart_type == "柱状图":
-        # 使用柱状图展示词频
-        df_bar = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
-        fig_bar = px.bar(df_bar, x='词汇', y='频次', title='柱状图')
-        st.plotly_chart(fig_bar)
     elif chart_type == "饼图":
         # 使用饼图展示词频
         df_pie = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
@@ -78,18 +75,27 @@ if url:
         radar.set_global_opts(title_opts=opts.TitleOpts(title='雷达图'))
         radar_html = radar.render_embed()
         html(radar_html, height=500)
-    elif chart_type == "箱形图":
-        # 使用箱形图展示词频
-        df_box = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
-        fig_box = px.box(df_box, x='词汇', y='频次', title='箱形图')
-        st.plotly_chart(fig_box)
     elif chart_type == "面积图":
         # 使用面积图展示词频
         df_area = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
         fig_area = px.area(df_area, x='词汇', y='频次', title='面积图')
         st.plotly_chart(fig_area)
-    elif chart_type == "树形图":
+    elif chart_type == "树状图":
         # 使用树形图展示词频
         df_treemap = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
-        fig_treemap = px.treemap(df_treemap, path=['词汇'], values='频次', title='树形图')
+        fig_treemap = px.treemap(df_treemap, path=['词汇'], values='频次', title='树状图')
         st.plotly_chart(fig_treemap)
+    elif chart_type == "Altair条形图":
+        df_alt = pd.DataFrame(top_20_words, columns=['词汇', '频次'])
+        chart = alt.Chart(df_alt).mark_bar().encode(
+            x=alt.X('词汇:N', sort='-y'),
+            y='频次:Q',
+            color=alt.Color('频次:Q', scale=alt.Scale(scheme='viridis')),
+            tooltip=['词汇', '频次']
+        ).properties(
+            width=600,
+            height=400,
+            title='词频分析条形图 (Altair版本)'
+        ).interactive()
+        st.altair_chart(chart, use_container_width=True)
+
