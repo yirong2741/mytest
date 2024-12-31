@@ -5,3 +5,4 @@ jieba==0.42.1
 pyecharts==2.0.7
 pyecharts-snapshot==0.2.0
 plotly==5.24.1
+altair==5.5.0
